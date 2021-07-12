@@ -1,4 +1,3 @@
-import io
 import os
 import re
 from datetime import datetime, timezone
@@ -62,7 +61,7 @@ class LogParser:
             return start + (curr - start) // 2
         return curr + (end - curr) // 2
 
-    def open(self, path: str, since: Optional[datetime], order: OrderEnum):
+    def _open(self, path: str, since: Optional[datetime], order: OrderEnum):
         """
         Opens log file and sets descriptor at the right place
         :param path: path to the log file.
@@ -136,7 +135,7 @@ class LogParser:
             if order == OrderEnum.asc:
                 since = _from
 
-        f = self.open(path, since, order)
+        f = self._open(path, since, order)
         while line := f.readline():
             try:
                 parsed = self._line_parser.parse_line(line.decode())
@@ -158,14 +157,8 @@ class LogParser:
     ) -> Stats:
         stats_obj = Stats()
         for log in self._parsed_lines(path, _from, to, order):
+            if stats_obj.requests % 1000 == 0:
+                print(f"\rrequests: {stats_obj.requests}", end="")
             stats_obj.update(log)
         stats_obj.end()
         return stats_obj
-
-
-
-line = """Nov 30 21:06:39 actify3-test-vm1 gunicorn[53253]: 172.16.3.14 - - [30/Nov/2019:21:06:39 +0100] "GET /internal/user/048c7dea-a7aa-4845-83c0-7a59d34bdec6/agenda/2019-11-30/2019-12-01 HTTP/1.1" 200 720 "-" "python-requests/2.22.0" 504524"""
-p = LogParser()
-dt = datetime(2019, 12, 1, 10, 6, 7)
-s = p.stats("../gunicorn.log2", _from=dt)
-s.print()

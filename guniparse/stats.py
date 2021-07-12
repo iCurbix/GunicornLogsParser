@@ -38,7 +38,7 @@ class Stats:
 
     def print(self) -> None:
         print(
-            f"requests: {self.requests}\n"
+            f"\rrequests: {self.requests}\n"
             f"requests/sec: {self.reqs_per_sec}\n"
             f"responses: {dict(self.statuses_counts)}\n"
             f"avg size of 2xx responses: {size_fmt(self.avg_resp_size)}\n"
