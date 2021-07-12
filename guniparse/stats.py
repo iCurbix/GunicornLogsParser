@@ -12,7 +12,7 @@ class Stats:
     requests: int = 0  # total number of requests
     reqs_per_sec: float = 0
     statuses_counts: Counter = field(default_factory=Counter)
-    avg_resp_size: int = 0  # for status 2xx
+    avg_resp_size: float = 0  # for status 2xx
     ok_resps: int = field(default=0, repr=False)
     _first_date: Optional[datetime] = field(default=None, repr=False)
     _last_date: Optional[datetime] = field(default=None, repr=False)
@@ -27,7 +27,7 @@ class Stats:
         self.statuses_counts[log.s] += 1
         if log.s // 100 == 2:
             size = log.b if log.b else 0
-            self.avg_resp_size = int((self.avg_resp_size * self.ok_resps + size) / (self.ok_resps + 1))
+            self.avg_resp_size = (self.avg_resp_size * self.ok_resps + size) / (self.ok_resps + 1)
             self.ok_resps += 1
         self._last_date = log.t
 
@@ -41,7 +41,7 @@ class Stats:
             f"\rrequests: {self.requests}\n"
             f"requests/sec: {self.reqs_per_sec}\n"
             f"responses: {dict(self.statuses_counts)}\n"
-            f"avg size of 2xx responses: {size_fmt(self.avg_resp_size)}\n"
+            f"avg size of 2xx responses: {size_fmt(int(self.avg_resp_size))}\n"
         )
 
     update = _update_first
