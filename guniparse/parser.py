@@ -16,7 +16,7 @@ class LogLineParser:
     sub_pipeline: List[Tuple[Pattern, str]] = [
         (re.compile(r"%\(t\)s"), r"\[%(t)s\]"),  # the groups would not match as expected otherwise
     ]
-    field_exp = re.compile(r"%\({?\w+}?\w?\)s")
+    field_exp = re.compile(r"%\({?[\w\-_]+}?\w?\)s")
 
     def __init__(self):
         self.line_exp = re.compile(self._prepare_line_exp(self.LOG_FORMAT))
@@ -32,7 +32,8 @@ class LogLineParser:
             start, end = match.span()
             exp += log_format[old_end:start]
             inside = log_format[start+2:end-2]  # get rid of %( and )s
-            exp += f"(?P<{inside}>.*)"  # named groups to easily extract with .groupdict()
+            # named groups to easily extract with .groupdict()
+            exp += f"(?P<{inside.replace('{', '').replace('}', '').replace('-', '_')}>.*)"
             old_end = end
 
         exp += log_format[old_end:]
