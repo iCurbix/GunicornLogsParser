@@ -1,6 +1,6 @@
 # GunicornLogsParser
 
-###Example usage
+### Example usage
 ```shell
 cd GunicornLogsParser
 python -m guniparse ./logfile.log
@@ -11,7 +11,7 @@ pip install GunicornLogsParser
 guniparse ./logfile.log
 ```
 
-###All available command line arguments
+### All available command line arguments
 | Argument                | Description                             |
 |:------------------------|:----------------------------------------|
 | --help                  | prints help message                     |
@@ -19,17 +19,17 @@ guniparse ./logfile.log
 |--to TO                  | to when should logs be parsed           |
 |--order ORDER            | specify logs order (default=descending) |
 
-###If you need more details about usage
+### If you need more details about usage
 ```shell
 guniparse --help
 ```
 
-##Tests
+## Tests
 Tests unfortunately are not as neatly written and do not cover as many test cases
 as I would like, but I just did not really have much free time :/
 
 Anyway...
-###Running tests
+### Running tests
 To run tests write while in project root directory
 ```shell
 python setup.py test 
